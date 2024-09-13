@@ -1,4 +1,5 @@
 # Metered API server in C
+- API server that you can access with authorization only... implemented in pure C 
 
 ## TODO:
 - [x] implement server
