@@ -36,7 +36,6 @@ int main(){
     }
     printf("socket succesfully listening on address\n");
 
-
     for(;;){
         int newsockfd = accept(sockfd, (struct sockaddr*)&host_addr, (socklen_t *)&host_addrlen);
         if(newsockfd<0){
