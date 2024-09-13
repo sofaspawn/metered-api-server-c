@@ -7,7 +7,6 @@
 #define BUFFER_SIZE 1024
 
 int main(){
-
     char buffer[BUFFER_SIZE];
 
     int sockfd = socket(AF_INET, SOCK_STREAM, 0);
@@ -44,7 +43,6 @@ int main(){
         }
         printf("connection accepted\n");
 
-
         int valread = read(newsockfd, buffer, BUFFER_SIZE);
         if(valread<0){
             perror("webserver (read)");
@@ -59,9 +57,7 @@ int main(){
 "<html><h1>hello, world</h1></html>\r\n";
 
         write(newsockfd, resp, sizeof(resp));
-
         close(newsockfd);
     }
-
     return 0;
 }
