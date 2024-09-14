@@ -1,16 +1,16 @@
 #include <stdio.h>
+#include <string.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <unistd.h>
 
-#define PORT 8080
+#define PORT 6969
 #define BUFFER_SIZE 1024
 
-int readstaticfiles(char resp){
+int readstaticfiles(char *resp, size_t resp_size){
     FILE *file;
     char filename[] = "./index.html";
-    //char ch;
-    char *ch = &resp;
+    size_t bytes_read;
 
     file = fopen(filename, "r");
     if (file==NULL){
@@ -18,15 +18,20 @@ int readstaticfiles(char resp){
         return 1;
     }
 
-    while(fgets(ch, BUFFER_SIZE, file) != NULL){
-        printf("%s\n",ch);
+    bytes_read = fread(resp, sizeof(char), resp_size-1, file);
+    if(bytes_read==0 && ferror(file)){
+        perror("Error reading file");
+        fclose(file);
+        return 1;
     }
 
+    resp[bytes_read] = '\0';
     fclose(file);
     return 0;
 }
 
 int main(){
+
     char buffer[BUFFER_SIZE];
 
     int sockfd = socket(AF_INET, SOCK_STREAM, 0);
@@ -71,10 +76,22 @@ int main(){
 
         printf("%s\n", buffer);
 
-        char resp[BUFFER_SIZE] = "";
-        readstaticfiles(resp);
+        char resp[BUFFER_SIZE];
+        readstaticfiles(resp, BUFFER_SIZE);
 
-        write(newsockfd, resp, sizeof(resp));
+        char header[BUFFER_SIZE];
+        snprintf(header, BUFFER_SIZE,
+                 "HTTP/1.1 200 OK\r\n"
+                 "Content-Length: %zu\r\n"
+                 "Content-Type: text/html\r\n"
+                 "\r\n",
+                 strlen(resp));
+        
+        printf("%s", header);
+        printf("%s", resp);
+
+        write(newsockfd, header, strlen(header));
+        write(newsockfd, resp, strlen(resp));
         close(newsockfd);
     }
     return 0;
