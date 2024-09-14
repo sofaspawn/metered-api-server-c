@@ -7,6 +7,10 @@
 #define PORT 6969
 #define BUFFER_SIZE 4096
 
+int authorizeConnection(){
+    return 0;
+}
+
 int readstaticfiles(char *resp, size_t resp_size){
     FILE *file;
     char filename[] = "./data.json";
