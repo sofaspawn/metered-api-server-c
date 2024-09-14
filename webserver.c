@@ -4,13 +4,12 @@
 #include <netinet/in.h>
 #include <unistd.h>
 
-#define PORT 8080
+#define PORT 6969
 #define BUFFER_SIZE 4096
 
 int authorizeConnection(char *buffer){
-    for (int i=0; i<sizeof(buffer)*BUFFER_SIZE; i++){
-        printf("%c\n", buffer[i]);
-    }
+    printf("%s\n", buffer);
+    printf("%lu\n", strlen(buffer));
     return 0;
 }
 
