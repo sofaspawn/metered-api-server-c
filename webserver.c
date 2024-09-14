@@ -6,6 +6,26 @@
 #define PORT 8080
 #define BUFFER_SIZE 1024
 
+int readstaticfiles(char resp){
+    FILE *file;
+    char filename[] = "./index.html";
+    //char ch;
+    char *ch = &resp;
+
+    file = fopen(filename, "r");
+    if (file==NULL){
+        perror("error opening file;");
+        return 1;
+    }
+
+    while(fgets(ch, BUFFER_SIZE, file) != NULL){
+        printf("%s\n",ch);
+    }
+
+    fclose(file);
+    return 0;
+}
+
 int main(){
     char buffer[BUFFER_SIZE];
 
@@ -33,7 +53,7 @@ int main(){
         perror("webserver (listen)");
         return 1;
     }
-    printf("socket succesfully listening on address\n");
+    printf("socket succesfully listening on address: http://localhost:%d\n", PORT);
 
     for(;;){
         int newsockfd = accept(sockfd, (struct sockaddr*)&host_addr, (socklen_t *)&host_addrlen);
@@ -51,10 +71,8 @@ int main(){
 
         printf("%s\n", buffer);
 
-        char resp[] = "HTTP/1.0 200 OK\r\n"
-"Server: webserver-c\r\n"
-"Content-type: text/html\r\n\r\n"
-"<html><h1>hello, world</h1></html>\r\n";
+        char resp[BUFFER_SIZE] = "";
+        readstaticfiles(resp);
 
         write(newsockfd, resp, sizeof(resp));
         close(newsockfd);
