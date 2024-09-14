@@ -4,10 +4,13 @@
 #include <netinet/in.h>
 #include <unistd.h>
 
-#define PORT 6969
+#define PORT 8080
 #define BUFFER_SIZE 4096
 
-int authorizeConnection(){
+int authorizeConnection(char *buffer){
+    for (int i=0; i<sizeof(buffer)*BUFFER_SIZE; i++){
+        printf("%c\n", buffer[i]);
+    }
     return 0;
 }
 
@@ -79,6 +82,7 @@ int main(){
         }
 
         printf("%s\n", buffer);
+        authorizeConnection(buffer);
 
         char resp[BUFFER_SIZE];
         readstaticfiles(resp, BUFFER_SIZE);
@@ -91,9 +95,6 @@ int main(){
                  "\r\n",
                  strlen(resp));
         
-        printf("%s", header);
-        printf("%s", resp);
-
         write(newsockfd, header, strlen(header));
         write(newsockfd, resp, strlen(resp));
         close(newsockfd);
