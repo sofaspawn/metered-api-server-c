@@ -20,7 +20,8 @@ int authorizeConnection(char *buffer){
         apikey = strdup(start);
     }
     printf("%s\n", apikey);
-    return 0;
+    int comp = strcmp(apikey, "correct_api_key_");
+    return comp;
 }
 
 int readstaticfiles(char *resp, size_t resp_size){
@@ -47,9 +48,8 @@ int readstaticfiles(char *resp, size_t resp_size){
 }
 
 int main(){
-
     char buffer[BUFFER_SIZE];
-
+    
     int sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd == -1){
         perror("webserver (socket)");
@@ -90,9 +90,6 @@ int main(){
             continue;
         }
 
-        printf("%s\n", buffer);
-        authorizeConnection(buffer);
-
         char resp[BUFFER_SIZE];
         readstaticfiles(resp, BUFFER_SIZE);
 
@@ -103,10 +100,12 @@ int main(){
                  "Content-Type: text/json\r\n"
                  "\r\n",
                  strlen(resp));
-        
-        write(newsockfd, header, strlen(header));
-        write(newsockfd, resp, strlen(resp));
-        close(newsockfd);
+
+        if(authorizeConnection(buffer)==0){
+            write(newsockfd, header, strlen(header));
+            write(newsockfd, resp, strlen(resp));
+            close(newsockfd);
+        }
     }
     return 0;
 }
