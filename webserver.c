@@ -4,16 +4,23 @@
 #include <netinet/in.h>
 #include <unistd.h>
 
-#define PORT 6969
+#define PORT 8080
 #define BUFFER_SIZE 4096
 
 int authorizeConnection(char *buffer){
-    printf("%s\n", buffer);
-    printf("%lu\n", strlen(buffer));
+    char *apikey = NULL;
+    char *start = strstr(buffer, "api_key=");
+    if (start) {
+        start += strlen("apikey:");
+        printf("%s\n", start);
+        char *end = strchr(start, '&');
+        if (end){
+            *end = '\0';
+        } 
+        apikey = strdup(start);
+    }
+    printf("%s\n", apikey);
     return 0;
-
-
-
 }
 
 int readstaticfiles(char *resp, size_t resp_size){
