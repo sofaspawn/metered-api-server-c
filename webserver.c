@@ -5,11 +5,11 @@
 #include <unistd.h>
 
 #define PORT 6969
-#define BUFFER_SIZE 1024
+#define BUFFER_SIZE 4096
 
 int readstaticfiles(char *resp, size_t resp_size){
     FILE *file;
-    char filename[] = "./index.html";
+    char filename[] = "./data.json";
     size_t bytes_read;
 
     file = fopen(filename, "r");
@@ -83,7 +83,7 @@ int main(){
         snprintf(header, BUFFER_SIZE,
                  "HTTP/1.1 200 OK\r\n"
                  "Content-Length: %zu\r\n"
-                 "Content-Type: text/html\r\n"
+                 "Content-Type: text/json\r\n"
                  "\r\n",
                  strlen(resp));
         
