@@ -11,6 +11,9 @@ int authorizeConnection(char *buffer){
     printf("%s\n", buffer);
     printf("%lu\n", strlen(buffer));
     return 0;
+
+
+
 }
 
 int readstaticfiles(char *resp, size_t resp_size){
